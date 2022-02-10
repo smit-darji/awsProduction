@@ -1,9 +1,9 @@
 {
-    "family": FAMILY,
+    "family": "Hello-task-smit",
     "containerDefinitions": [
         {
-            "image": "REPOSITORY_URI:BUILD_NUMBER",
-            "name": NAME,
+            "image": ":demo",
+            "name": "hello-Container-smit",
 	    "essential": true,
             "portMappings": [
                 {
@@ -19,5 +19,5 @@
              "FARGATE"
     ],
     "networkMode": "awsvpc",
-    "executionRoleArn": ROLE_ARN 
+    "executionRoleArn": "arn:aws:iam::997817439961:role/ecsTaskExecutionRole" 
 }
