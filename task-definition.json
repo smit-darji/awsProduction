@@ -1,9 +1,9 @@
 {
-    "family": "Hello-task-smit",
+    "family": "dev-task-smit",
     "containerDefinitions": [
         {
             "image": ":demo",
-            "name": "hello-Container-smit",
+            "name": "dev-container-smit",
 	    "essential": true,
             "portMappings": [
                 {
