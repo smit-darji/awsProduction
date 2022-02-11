@@ -2,7 +2,7 @@
     "family": "dev-task-smit",
     "containerDefinitions": [
         {
-            "image": ":demo",
+            "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:latest",
             "name": "dev-container-smit",
 	    "essential": true,
             "portMappings": [
