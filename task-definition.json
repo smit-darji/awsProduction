@@ -1,5 +1,5 @@
 {
-    "family": "dev-task-smit",
+    "family": "FAMILY",
     "containerDefinitions": [
         {
             "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:latest",
