@@ -1,9 +1,9 @@
 {
-    "family": "FAMILY",
+    "family": FAMILY,
     "containerDefinitions": [
         {
             "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:latest",
-            "name": "dev-container-smit",
+            "name": FAMILY,
 	    "essential": true,
             "portMappings": [
                 {
