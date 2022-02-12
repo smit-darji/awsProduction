@@ -1,22 +1,23 @@
 AWS_ACCOUNT_ID="997817439961"
 AWS_DEFAULT_REGION="ap-south-1"
-IMAGE_REPO_NAME="dev-repo-smit"
+IMAGE_REPO_NAME="main-repo-smit"
 IMAGE_TAG="latest_${GIT_COMMIT} "       
-CLUSTER_NAME="demo-cluster-smit"
-SERVICE_NAME="softvan-smit-service"
-TASK_DEFINITION_NAME="softvan-dev-smit"
+CLUSTER_NAME="main-cluster-smit"
+SERVICE_NAME="main-service-smit"
+TASK_DEFINITION_NAME="softvan-main-smit"
 DESIRED_COUNT="1"
-     // login in to aws ecr
+ 
+// login in to aws ecr
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 997817439961.dkr.ecr.ap-south-1.amazonaws.com
 
 // build new image
-docker build -t dev-repo-smit .
+docker build -t main-repo-smit .
 
-# tag image
-docker tag dev-repo-smit:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
+// tag image
+docker tag main-repo-smit:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
 
 // push image in aws ecr
-docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
+docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
 
 // get role arn store in variable
 ROLE_ARN=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.executionRoleArn`
