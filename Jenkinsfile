@@ -8,7 +8,7 @@ TASK_DEFINITION_NAME="softvan-main-smit"
 DESIRED_COUNT="1"
  
 // login in to aws ecr
-aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 997817439961.dkr.ecr.ap-south-1.amazonaws.com
+aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin 997817439961.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 
 // build new image
 docker build -t main-repo-smit .
