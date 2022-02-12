@@ -1,25 +1,24 @@
  AWS_ACCOUNT_ID="997817439961"
         AWS_DEFAULT_REGION="ap-south-1"
         IMAGE_REPO_NAME="main-repo-smit"
-        IMAGE_TAG="latest"       
+        IMAGE_TAG="latest_${GIT_COMMIT}"       
         CLUSTER_NAME="main-cluster-smit"
         SERVICE_NAME="main-service-smit"
         TASK_DEFINITION_NAME="softvan-main-smit"
-        DESIRED_COUNT="1"      
-        REVISION =  "1"
+        DESIRED_COUNT="1"              
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
      
 # login in to aws ecr
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 997817439961.dkr.ecr.ap-south-1.amazonaws.com
 
 # build new image
-docker build -t dev-repo-smit .
+docker build -t main-repo-smit .
 
 # tag image
-docker tag dev-repo-smit:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
+docker tag main-repo-smit:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
 
 # push image in aws ecr
-docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
+docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
 
 # get role arn store in variable
 ROLE_ARN=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.executionRoleArn`
@@ -49,7 +48,7 @@ aws ecs register-task-definition --cli-input-json file://task-definition.json --
 if [ $TASK_DEF_REVISION>0 ]
 then
 # deregister previous task definiiton
-aws ecs deregister-task-definition --region ap-south-1 --task-definition softvan-dev-smit:${TASK_DEF_REVISION}
+aws ecs deregister-task-definition --region ap-south-1 --task-definition softvan-main-smit:${TASK_DEF_REVISION}
 fi
 # update servise
 aws ecs update-service --region ap-south-1 --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}" --force-new-deployment
