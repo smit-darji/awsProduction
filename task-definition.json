@@ -1,9 +1,9 @@
 {
-    "family": "softvan-main-smit",
+    "family": FAMILY,
     "containerDefinitions": [
         {
             "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:latest",
-            "name": "softvan-main-container-smit",
+            "name": NAME,
 	    "essential": true,
             "portMappings": [
                 {
