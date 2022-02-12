@@ -1,63 +1,53 @@
-name: Deploy to Amazon ECS
+AWS_ACCOUNT_ID="997817439961"
+AWS_DEFAULT_REGION="ap-south-1"
+IMAGE_REPO_NAME="dev-repo-smit"
+IMAGE_TAG="latest_${GIT_COMMIT} "       
+CLUSTER_NAME="demo-cluster-smit"
+SERVICE_NAME="softvan-smit-service"
+TASK_DEFINITION_NAME="softvan-dev-smit"
+DESIRED_COUNT="1"
+     
+# login in to aws ecr
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 997817439961.dkr.ecr.ap-south-1.amazonaws.com
 
-on:
-  push:
-    branches:
-      - Devloper
+# build new image
+docker build -t dev-repo-smit .
 
-env:
-  AWS_REGION: ap-south-1                   
-  ECR_REPOSITORY: dev-image-smit           
-  ECS_SERVICE: dev-service-smit            
-  ECS_CLUSTER: dev-cluster-smit                 
-  ECS_TASK_DEFINITION: dev-task-smit/json
-  CONTAINER_NAME: dev-container-smit
+# tag image
+docker tag dev-repo-smit:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
 
-jobs:
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    environment: production
+# push image in aws ecr
+docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+# get role arn store in variable
+ROLE_ARN=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.executionRoleArn`
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
-        with:
-          aws-access-key-id: ${{ secrets.AKIA6QUUN23M5HBX46D5 }}
-          aws-secret-access-key: ${{ secrets.XaAoOF6G11Ha1efaIQxOyDyek/QVBuMM3DNji6z+ }}
-          aws-region: ${{ env.ap-south-1 }}
+# get family store in variable
+FAMILY=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.family`
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
+# get name arn store in variable
+NAME=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.containerDefinitions[].name`
 
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+# find and replace some content in task-definition file
+sed -i "s#BUILD_NUMBER#$IMAGE_TAG#g" task-definition.json
+sed -i "s#REPOSITORY_URI#$REPOSITORY_URI#g" task-definition.json
+sed -i "s#ROLE_ARN#$ROLE_ARN#g" task-definition.json
+sed -i "s#FAMILY#$FAMILY#g" task-definition.json
+sed -i "s#NAME#$NAME#g" task-definition.json
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+# Get task definition from the aws console
+TASK_DEF_REVISION=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.revision`
+
+TASK_DEF_REVISION=$((TASK_DEF_REVISION-4))
+
+# register new task definition from new generated task definition file
+aws ecs register-task-definition --cli-input-json file://task-definition.json --region="${AWS_DEFAULT_REGION}"
+
+# deregister previous task definiiton
+if [ $TASK_DEF_REVISION>0 ]
+then
+# deregister previous task definiiton
+aws ecs deregister-task-definition --region ap-south-1 --task-definition softvan-dev-smit:${TASK_DEF_REVISION}
+fi
+# update servise
+aws ecs update-service --region ap-south-1 --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}" --force-new-deployment
