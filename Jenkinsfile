@@ -10,7 +10,7 @@ environment {
         SERVICE_NAME="main-service-smit"
         TASK_DEFINITION_NAME="softvan-main-smit"
         DESIRED_COUNT="1"      
-        REVISION =  "1"
+     
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
     }
     stages {
