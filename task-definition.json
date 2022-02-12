@@ -1,5 +1,5 @@
 {
-    "family": FAMILY,
+    "family": "softvan-main-container-smit",
     "containerDefinitions": [
         {
             "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:latest",
