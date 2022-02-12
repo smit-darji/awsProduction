@@ -77,10 +77,11 @@ environment {
                   
                   sh 'aws ecs register-task-definition --cli-input-json file://task-definition.json --region="${AWS_DEFAULT_REGION}"'
                  
-                   //def REVISION=sh(script:"aws ecs describe-task-definition --task-definition '${TASK_DEFINITION_NAME}' --region '${AWS_DEFAULT_REGION}' | jq .taskDefinition.revision",returnStatus:true)
+                   def REVISION=sh(script:"aws ecs describe-task-definition --task-definition '${TASK_DEFINITION_NAME}' --region='${AWS_DEFAULT_REGION}' | jq .taskDefinition.revision", returnStatus:true)
                    //sh "echo Revision=${REVISION}"
-                   
-                    sh "aws ecs update-service --cluster '${CLUSTER_NAME}' --service '${SERVICE_NAME}' --task-definition '${TASK_DEFINITION_NAME}':'4' --desired-count '${DESIRED_COUNT}'"
+                  
+                  sh 'aws ecs update-service --region ap-south-1 --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}" --force-new-deployment'
+                  //  sh "aws ecs update-service --cluster '${CLUSTER_NAME}' --service '${SERVICE_NAME}' --task-definition '${TASK_DEFINITION_NAME}':'${REVISION}' --desired-count '${DESIRED_COUNT}'"
                 }
             }
         }
