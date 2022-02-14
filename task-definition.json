@@ -2,7 +2,7 @@
     "family": FAMILY,
     "containerDefinitions": [
         {
-            "image": "BUILD_NUMBER",
+            "image": "${IMAGE_TAG}",
             "name": NAME,
 	    "essential": true,
             "portMappings": [
