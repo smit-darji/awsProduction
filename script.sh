@@ -2,7 +2,7 @@
         AWS_ACCOUNT_ID="997817439961"
         AWS_DEFAULT_REGION="ap-south-1"
         IMAGE_REPO_NAME="dev-repo-smit"
-        IMAGE_TAG="latest"       
+        IMAGE_TAG="latest_${GIT_COMMIT}"       
         CLUSTER_NAME="Devloper-cluster-smit"
         SERVICE_NAME="Devloper-smit-service"
         TASK_DEFINITION_NAME="Devloper-Task-smit"
