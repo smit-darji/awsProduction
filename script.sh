@@ -1,12 +1,12 @@
- 
-       AWS_ACCOUNT_ID="997817439961"
+
+        AWS_ACCOUNT_ID="997817439961"
         AWS_DEFAULT_REGION="ap-south-1"
-        IMAGE_REPO_NAME="main-repo-smit"
-        IMAGE_TAG="latest_${GIT_COMMIT}"      
-        CLUSTER_NAME="prod-mainClusterMain-smit"
-        SERVICE_NAME="prod-main-smit-service"
-        TASK_DEFINITION_NAME="prod-main-smit"
-        DESIRED_COUNT="1"                    
+        IMAGE_REPO_NAME="dev-repo-smit"
+        IMAGE_TAG="latest"       
+        CLUSTER_NAME="Devloper-cluster-smit"
+        SERVICE_NAME="Devloper-smit-service"
+        TASK_DEFINITION_NAME="Devloper-Task-smit"
+        DESIRED_COUNT="1"      
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
         
         ECR_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
@@ -18,10 +18,10 @@ aws ecr get-login-password --region ap-south-1 | docker login --username AWS --p
 docker build -t ${IMAGE_TAG} .
 
 # tag image
-docker tag ${IMAGE_TAG}:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
+docker tag ${IMAGE_TAG}:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
 
 # push image in aws ecr
-#docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
+#docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/dev-repo-smit:${IMAGE_TAG}
 docker push ${ECR_IMAGE}
 
 # get role arn store in variable
@@ -52,7 +52,7 @@ aws ecs register-task-definition --cli-input-json file://task-definition.json --
 if [ $TASK_DEF_REVISION>0 ]
 then
 # deregister previous task definiiton
-aws ecs deregister-task-definition --region ap-south-1 --task-definition softvan-main-smit:${TASK_DEF_REVISION}
+aws ecs deregister-task-definition --region ap-south-1 --task-definition "${TASK_DEFINITION_NAME}":${TASK_DEF_REVISION}
 fi
 # update servise
 aws ecs update-service --region ap-south-1 --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}" --force-new-deployment
