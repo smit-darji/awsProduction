@@ -13,10 +13,10 @@
 aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 997817439961.dkr.ecr.ap-south-1.amazonaws.com
 
 # build new image
-docker build -t main-repo-smit .
+docker build -t ${IMAGE_TAG} .
 
 # tag image
-docker tag main-repo-smit:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
+docker tag ${IMAGE_TAG}:latest 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
 
 # push image in aws ecr
 docker push 997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:${IMAGE_TAG}
