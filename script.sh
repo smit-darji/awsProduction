@@ -52,7 +52,7 @@ aws ecs register-task-definition --cli-input-json file://task-definition.json --
 if [ $TASK_DEF_REVISION>0 ]
 then
 # deregister previous task definiiton
-aws ecs deregister-task-definition --region ap-south-1 --task-definition softvan-main-smit:${TASK_DEF_REVISION}
+aws ecs deregister-task-definition --region ap-south-1 --task-definition "${TASK_DEFINITION_NAME}":${TASK_DEF_REVISION}
 fi
 # update servise
 aws ecs update-service --region ap-south-1 --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}" --force-new-deployment
