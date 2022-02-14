@@ -45,6 +45,8 @@ TASK_DEF_REVISION=$((TASK_DEF_REVISION-4))
 # register new task definition from new generated task definition file
 aws ecs register-task-definition --cli-input-json file://task-definition.json --region="${AWS_DEFAULT_REGION}"
 
+aws ecs update-service --cluster ${CLUSTER_NAME} --service ${SERVICE_NAME} --force-new-deployment
+
 # deregister previous task definiiton
 if [ $TASK_DEF_REVISION>0 ]
 then
