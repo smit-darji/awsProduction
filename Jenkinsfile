@@ -6,9 +6,9 @@ environment {
         AWS_DEFAULT_REGION="ap-south-1"
         IMAGE_REPO_NAME="main-repo-smit"
         IMAGE_TAG="latest"       
-        CLUSTER_NAME="main-cluster-smit"
-        SERVICE_NAME="main-service-smit"
-        TASK_DEFINITION_NAME="softvan-main-smit"
+        CLUSTER_NAME="prod-mainClusterMain-smit"
+        SERVICE_NAME="prod-main-smit-service"
+        TASK_DEFINITION_NAME="prod-main-smit"
         DESIRED_COUNT="1"      
      
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
