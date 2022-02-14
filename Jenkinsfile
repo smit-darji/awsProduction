@@ -17,7 +17,7 @@ environment {
          stage('Trigger pipeline and clone code') {
             steps {
                 echo 'Someone push code on git.'
-                git branch: 'main', url: 'https://github.com/smit-darji/awsProduction.git'
+                git branch: 'Devloper', url: 'https://github.com/smit-darji/awsProduction.git'
                 
                   sh "chmod +x -R ${env.WORKSPACE}"
                 sh "./script.sh"
