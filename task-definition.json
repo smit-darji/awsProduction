@@ -7,8 +7,8 @@
 	    "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 3000,
-                    "hostPort": 3000
+                    "containerPort": 3001,
+                    "hostPort": 3001
                 }
             ]
         }
@@ -19,6 +19,5 @@
              "FARGATE"
     ],
     "networkMode": "awsvpc",
-    "executionRoleArn": "arn:aws:iam::997817439961:role/ecsTaskExecutionRole" 
+    "executionRoleArn": "arn:aws:iam::997817439961:role/ecsTaskExecutionRole"
 }
- 
