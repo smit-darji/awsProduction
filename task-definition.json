@@ -2,7 +2,7 @@
     "family": FAMILY,
     "containerDefinitions": [
         {
-            "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:latest_73edcaa86678b10784a7a903d60a8741bd25e9e7",
+            "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:latest_23ce893f2f295d8dd914e2a011023aa0fd40d58a",
             "name": NAME,
 	    "essential": true,
             "portMappings": [
