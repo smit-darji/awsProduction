@@ -2,7 +2,7 @@
     "family": FAMILY,
     "containerDefinitions": [
         {
-            "image": "${IMAGE_TAG}",
+            "image": "997817439961.dkr.ecr.ap-south-1.amazonaws.com/main-repo-smit:latest_73edcaa86678b10784a7a903d60a8741bd25e9e7",
             "name": NAME,
 	    "essential": true,
             "portMappings": [
